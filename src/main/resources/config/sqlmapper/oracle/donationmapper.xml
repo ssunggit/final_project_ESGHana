@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="donation.dao.donationDAO">
+	<resultMap type="kr.ac.kopo.donation.vo.DonationVO" id="DonationMap">
+      <result column="donation_No" property="donationNo"/>
+      <result column="donation_Title" property="donationTitle"/>
+      <result column="donation_Info" property="donationInfo"/>
+      <result column="donation_Company" property="donationCompany"/>
+      <result column="donation_Start_Date" property="donationStartDate"/>
+      <result column="donation_End_Date" property="donationEndDate"/>
+      <result column="donation_Goal" property="donationGoal"/> 
+      <result column="donation_Current_Amount" property="donationCurrentAmount"/> 
+   </resultMap>
+   
+  <!-- 기부리스트 -->
+  <select id="selectDonationList" resultMap="DonationMap">
+  	select * from donation  
+  </select>
+  
+  <!-- 페이징한 기부리스트 -->
+  <select id="selectDonationPagingList" parameterType="kr.ac.kopo.page.vo.Criteria" resultMap="DonationMap">
+	  SELECT *
+	  FROM (
+	        SELECT ROW_NUMBER() OVER (order by DONATION_NO) num
+	             , d.*
+	          FROM donation d
+	        ) 
+	  WHERE NUM BETWEEN #{rowStart} and #{rowEnd}
+	  order by DONATION_NO
+  </select>
+  
+  <!-- 검색 기부리스트 -->
+  <select id="selectDonationKeywordList" parameterType="String" resultMap="DonationMap">
+  	select distinct * from donation where DONATION_TITLE like '%' || #{keyword} || '%' 
+	or DONATION_INFO like '%' ||  #{keyword} || '%' 
+	or DONATION_COMPANY like '%' ||  #{keyword} || '%'
+  </select>
+  
+  <!-- 기부 상세 조회 -->
+  <select id="selectDonationOne" parameterType="int" resultMap="DonationMap">
+  	select * from donation where donation_no = #{donationNo} 
+  </select>
+  
+</mapper>

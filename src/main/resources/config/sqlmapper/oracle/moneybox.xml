@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="moneyBox.dao.moneyBoxDAO">
+	<resultMap type="kr.ac.kopo.moneybox.vo.MoneyBoxVO" id="MoneyBoxMap">
+      <result column="mb_no" property="mbNo"/>
+      <result column="mb_Title" property="mbTitle"/>
+      <result column="balance" property="balance"/>
+      <result column="donation_amount" property="donationAmount"/>
+      <result column="id" property="id"/>
+      <result column="account_No" property="accountNo"/>
+      <result column="donation_title" property="donationTitle"/>
+      <result column="donation_info" property="donationInfo"/> 
+      <result column="MB_START_DATE" property="mbStartDate"/> 
+      <result column="MB_END_DATE" property="mbEndDate"/> 
+      <result column="Auto_Deposit_Date" property="autoDepositDate"/> 
+      <result column="saving_amount" property="savingAmount"/> 
+      <result column="status" property="status"/> 
+   </resultMap>
+  
+   <!-- 저금통 생성 -->
+  <insert id="insertMoneyBox" parameterType="MoneyBoxVO">
+  	insert into money_box(mb_no, balance, DONATION_AMOUNT, ID, DONATION_title, DONATION_info, MB_START_DATE, MB_END_DATE, account_no, mb_Title, Auto_Deposit_Date, saving_Amount) 
+	values (seq_mb_no.nextval, 0, #{donationAmount}, #{id}, #{donationTitle}, #{donationInfo}, #{mbStartDate}, #{mbEndDate}, #{accountNo}, #{mbTitle}, #{autoDepositDate}, #{savingAmount})
+  </insert>
+  
+  <!-- 로그인한 유저의 저금통 리스트 출력 -->
+  <select id="selectMoneyBoxList" parameterType="String" resultMap="MoneyBoxMap">
+  	select * from money_box where id = #{id} order by mb_no desc
+  </select>
+  
+  <!-- 자동저금할 저금통 리스트 -->
+  <select id="selectAllMoneyBoxListAuto1days" resultMap="MoneyBoxMap">
+  	select * from money_box where Auto_Deposit_Date = 1
+  </select>
+  <select id="selectAllMoneyBoxListAuto10days" resultMap="MoneyBoxMap">
+  	select * from money_box where Auto_Deposit_Date = 10
+  </select>
+  <select id="selectAllMoneyBoxListAuto15days" resultMap="MoneyBoxMap">
+  	select * from money_box where Auto_Deposit_Date = 15
+  </select>
+  <select id="selectAllMoneyBoxListAuto20days" resultMap="MoneyBoxMap">
+  	select * from money_box where Auto_Deposit_Date = 20
+  </select>
+  
+  
+  <!-- 기부저금통 상세 조회 -->
+  <select id="selectMoneyBoxOne" parameterType="int" resultMap="MoneyBoxMap">
+  	select * from money_box where mb_no = #{mbNo} 
+  </select>
+  
+  <!-- 오늘 날짜 조회 -->
+  <select id="selectSysdate" resultType="String">
+  	select to_char(sysdate,'yyyy-mm-dd') from dual
+  </select>
+  
+  <!-- 저금통 자동이체 -->
+  <update id="updateBalance" parameterType="MoneyBoxVO">
+  	UPDATE money_box SET BALANCE = BALANCE + #{savingAmount} where mb_no = #{mbNo}
+  </update>
+  
+  <!-- 저금통 종료  -->
+  <update id="updateMoneyBox" parameterType="MoneyBoxVO">
+  	UPDATE money_box SET BALANCE = #{balance}, status = #{status}, Auto_Deposit_Date = 0 where mb_no = #{mbNo}
+  </update>
+  
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="saving.dao.savingDAO">
+	<resultMap type="kr.ac.kopo.saving.vo.SavingVO" id="SavingMap">
+      <result column="saving_History_No" property="savingHistoryNo"/>
+      <result column="account_No" property="accountNo"/>
+      <result column="saving_Amount" property="savingAmount"/>
+      <result column="saving_Date" property="savingDate"/>
+      <result column="saving_Type" property="savingType"/>
+      <result column="mb_No" property="mbNo"/>
+   </resultMap>
+   
+   <!-- 저금내역 추가 -->
+  <insert id="insertSavingHistory" parameterType="SavingVO">
+	INSERT INTO SAVING_HISTORY(ACCOUNT_NO, SAVING_AMOUNT, SAVING_TYPE, mb_No) VALUES (#{accountNo}, #{savingAmount}, 's', #{mbNo})
+  </insert>
+  
+  <!-- 저금리스트 조회 -->
+  <select id="selectSavinglList" parameterType="int" resultMap="SavingMap">
+  	select * from SAVING_HISTORY where mb_No = #{mbNo}
+  </select>
+  
+</mapper>

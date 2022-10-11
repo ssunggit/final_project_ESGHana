@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="challenge.dao.challengeDAO">
+	<resultMap type="kr.ac.kopo.challenge.vo.ChallengeVO" id="ChallengeMap">
+      <result column="challenge_Code" property="challengeCode"/>
+      <result column="challenge_Name" property="challengeName"/>
+      <result column="challenge_Reward_Amount" property="challengeRewardAmount"/>
+      <result column="challenge_Contractor_Code" property="challengeContractorCode"/>
+      <result column="challenge_Info" property="challengeInfo"/>
+      <result column="COMPANY_CODE" property="companyCode"/>
+      <result column="challenge_Image" property="challengeImage"/>
+   </resultMap>
+   
+   <resultMap type="kr.ac.kopo.challenge.vo.ChallengeHistoryVO" id="ChallengeHistoryMap">
+      <result column="challenge_History_No" property="challengeHistoryNo"/>
+      <result column="challenge_Code" property="challengeCode"/>
+      <result column="challenge_Point" property="challengePoint"/>
+      <result column="Challenge_Date" property="challengeDate"/>
+      <result column="id" property="id"/>
+   </resultMap>
+   
+   <resultMap type="kr.ac.kopo.member.vo.MemberVO" id="MemberMap">
+      <result column="id" property="id"/>
+      <result column="password" property="password"/>
+      <result column="name" property="name"/>
+      <result column="tel" property="tel"/>
+      <result column="birth" property="birth"/>
+      <result column="email" property="email"/>
+      <result column="address" property="address"/>
+      <result column="type" property="type"/>
+      <result column="reg_Date" property="regDate"/>
+      <result column="company_Code" property="companyCode"/>
+      <result column="point" property="point"/>
+      <result column="profile" property="profile"/>
+   </resultMap>
+   
+	<resultMap type="kr.ac.kopo.challengeCompanyJoin.vo.ChallengeCompanyJoinVO" id="ChallengeCompanyJoinMap">
+      <result column="challenge_Company_Join_Code" property="challengeCompanyJoinCode"/>
+      <result column="challenge_Code" property="challengeCode"/>
+      <result column="challenge_Name" property="challengeName"/>
+      <result column="join_Date" property="joinDate"/>
+      <result column="COMPANY_CODE" property="companyCode"/>
+   </resultMap>
+	
+	<select id="userCompanyChallenge" parameterType="String" resultMap="ChallengeMap">
+		select * from challenge where company_Code = #{companyCode}
+	</select>
+	
+	<insert id="insertChallengePoint" parameterType="challengeHistoryVO">
+		insert into CHALLENGE_HISTORY(CHALLENGE_HISTORY_NO, CHALLENGE_CODE, ID, CHALLENGE_POINT) 
+  		values (Seq_CHALLENGE_HISTORY_no.nextval, #{challengeCode}, #{id}, #{challengePoint})
+	</insert>
+	
+	<select id="selectChallengeHistory" parameterType="challengeHistoryVO" resultMap="ChallengeHistoryMap">
+		select * from CHALLENGE_HISTORY where id = #{id} and CHALLENGE_CODE = #{challengeCode}
+	</select>
+	
+	<select id="sumChallengePoint" parameterType="String" resultType="int">
+		select sum(CHALLENGE_POINT) from CHALLENGE_HISTORY where id = #{id} and CHALLENGE_CODE = #{challengeCode}
+	</select>
+	
+	<select id="userChallengeRank1" parameterType="String" resultType="map">
+		select a.* from (select m.*, rownum r
+		from member m,
+		(select id, rownum from (select id, RANK() OVER(ORDER BY sum(CHALLENGE_POINT) desc) from CHALLENGE_HISTORY where CHALLENGE_CODE = #{challengeCode} 
+		group by id) where rownum <![CDATA[<=]]> 3) r where m.id = r.id) a where a.r = 1
+	</select>
+	
+	<select id="userChallengeRank2" parameterType="String" resultType="map">
+		select a.* from (select m.*, rownum r
+		from member m,
+		(select id, rownum from (select id, RANK() OVER(ORDER BY sum(CHALLENGE_POINT) desc) from CHALLENGE_HISTORY where CHALLENGE_CODE = #{challengeCode} 
+		group by id) where rownum <![CDATA[<=]]> 3) r where m.id = r.id) a where a.r = 2
+	</select>
+	
+	<select id="userChallengeRank3" parameterType="String" resultType="map">
+		select a.* from (select m.*, rownum r
+		from member m,
+		(select id, rownum from (select id, RANK() OVER(ORDER BY sum(CHALLENGE_POINT) desc) from CHALLENGE_HISTORY where CHALLENGE_CODE = #{challengeCode} 
+		group by id) where rownum <![CDATA[<=]]> 3) r where m.id = r.id) a where a.r = 3
+	</select>
+	
+	<select id="userChallengeRankCount1" parameterType="String" resultType="int">
+		select count(*)
+		from (select a.id from (select m.*, rownum r
+		from member m,
+		(select id, rownum from (select id, RANK() OVER(ORDER BY sum(CHALLENGE_POINT) desc) from CHALLENGE_HISTORY where CHALLENGE_CODE =#{challengeCode} 
+		group by id) where rownum <![CDATA[<=]]> 3) r where m.id = r.id) a where a.r = 1) aid, challenge_history 
+		where aid.id=challenge_history.id
+	</select>
+	
+	<select id="userChallengeRankCount2" parameterType="String" resultType="int">
+		select count(*)
+		from (select a.id from (select m.*, rownum r
+		from member m,
+		(select id, rownum from (select id, RANK() OVER(ORDER BY sum(CHALLENGE_POINT) desc) from CHALLENGE_HISTORY where CHALLENGE_CODE =#{challengeCode} 
+		group by id) where rownum <![CDATA[<=]]> 3) r where m.id = r.id) a where a.r = 2) aid, challenge_history 
+		where aid.id=challenge_history.id
+	</select>
+	
+	<select id="userChallengeRankCount3" parameterType="String" resultType="int">
+		select count(*)
+		from (select a.id from (select m.*, rownum r
+		from member m,
+		(select id, rownum from (select id, RANK() OVER(ORDER BY sum(CHALLENGE_POINT) desc) from CHALLENGE_HISTORY where CHALLENGE_CODE =#{challengeCode} 
+		group by id) where rownum <![CDATA[<=]]> 3) r where m.id = r.id) a where a.r = 3) aid, challenge_history 
+		where aid.id=challenge_history.id
+	</select>
+	
+	<select id="companyMemberList" parameterType="String" resultType="map">
+		select m.*,c_count from (select * from member where COMPANY_CODE = #{companyCode}) m, 
+		(select id, count(*) as c_count from CHALLENGE_HISTORY group by id) c where m.id=c.id order by c_count desc
+	</select>
+	<select id="allChallenge" resultMap="ChallengeMap">
+		SELECT * FROM challenge
+	</select>
+	
+	<insert id="insertChallenge" parameterType="challengeVO">
+		INSERT INTO challenge(challenge_Code, challenge_Name, challenge_Reward_Amount, challenge_Info, challenge_image) 
+		VALUES('c'||(seq_challenge_no.nextval), #{challengeName}, #{challengeRewardAmount}, #{challengeInfo}, #{challengeImage})
+	</insert>
+	
+	<insert id="insertchallengeCompanyJoin" parameterType="challengeCompanyJoinVO">
+		INSERT INTO CHALLENGE_COMPANY_JOIN(CHALLENGE_COMPANY_JOIN_Code, CHALLENGE_CODE, CHALLENGE_NAME, COMPANY_CODE) 
+		VALUES('cj'||(seq_CHALLENGE_COMPANY_JOIN_no.nextval), #{challengeCode}, #{challengeName}, #{companyCode})
+	</insert>
+	
+	<select id="selectCompanyChallengeList" parameterType="String" resultMap="ChallengeCompanyJoinMap">
+		select * from CHALLENGE_COMPANY_JOIN where COMPANY_CODE = #{companyCode}
+	</select>
+	
+</mapper>

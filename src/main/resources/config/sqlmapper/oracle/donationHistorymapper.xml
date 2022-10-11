@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="donationHistory.dao.donationHistoryDAO">
+	<resultMap type="kr.ac.kopo.donationHistory.vo.DonationHistoryVO" id="DonationHistorMap">
+      <result column="donation_History_No" property="donationHistoryNo"/>
+      <result column="donation_Title" property="donationTitle"/>
+      <result column="donation_Amount" property="donationAmount"/>
+      <result column="donation_Company" property="donationCompany"/>
+      <result column="donation_Start_Date" property="donationStartDate"/>
+      <result column="donation_End_Date" property="donationEndDate"/>
+      <result column="donation_No" property="donationNo"/>
+      <result column="mb_No" property="mbNo"/>
+      <result column="name" property="name"/>
+   </resultMap>
+   
+  <insert id="insertDonate" parameterType="DonationHistoryVO">
+  	insert into donation_History(DONATION_TITLE, NAME,DONATION_AMOUNT,DONATION_COMPANY, donation_Start_Date, donation_End_Date,DONATION_NO, MB_NO) 
+  	values (#{donationTitle}, #{name}, #{donationAmount},'test', #{donationStartDate}, #{donationEndDate}, #{donationNo}, #{mbNo})
+  </insert>
+  
+  <select id="selectDonationHistoryList" parameterType="String" resultMap="DonationHistorMap">
+  	select donation_History_No, donation_Title, donation_Amount, donation_Company, 
+  	to_char(donation_Start_Date,'yyyy')||'년 '||to_char(donation_Start_Date,'MM')||'월 '||to_char(donation_Start_Date,'DD')||'일' AS donation_Start_Date ,
+  	to_char(donation_End_Date,'yyyy')||'년 '||to_char(donation_End_Date,'MM')||'월 '||to_char(donation_End_Date,'DD')||'일' AS donation_End_Date, 
+  	donation_No, donation_No, mb_No, name from donation_History where name = #{name}
+  </select>
+  
+  <select id="selectOnedonationHistory" parameterType="int" resultMap="DonationHistorMap">
+  	select donation_History_No, donation_Title, donation_Amount, donation_Company, 
+  	to_char(donation_Start_Date,'yyyy')||'년 '||to_char(donation_Start_Date,'MM')||'월 '||to_char(donation_Start_Date,'DD')||'일' AS donation_Start_Date ,
+  	to_char(donation_End_Date,'yyyy')||'년 '||to_char(donation_End_Date,'MM')||'월 '||to_char(donation_End_Date,'DD')||'일' AS donation_End_Date, 
+  	donation_No, donation_No, mb_No, name 
+  	from donation_History where donation_History_No = #{donationHistoryNo}
+  </select>
+  
+</mapper>

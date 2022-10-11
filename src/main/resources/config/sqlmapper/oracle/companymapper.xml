@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="company.dao.companyDAO">
+	<resultMap type="kr.ac.kopo.company.vo.CompanyVO" id="CompanyMap">
+      <result column="company_Code" property="companyCode"/>
+      <result column="company_Name" property="companyName"/>
+      <result column="company_Number" property="companyNumber"/>
+      <result column="reg_Date" property="regDate"/>
+   </resultMap>
+   
+	<select id="checkCompany" parameterType="CompanyVO" resultMap="CompanyMap">
+		select * from company where company_Number = #{companyNumber}
+	</select>
+	
+	<select id="userCompanyInfo" parameterType="String" resultMap="CompanyMap">
+		select * from company where company_Code = #{companyCode}
+	</select>
+	
+</mapper>

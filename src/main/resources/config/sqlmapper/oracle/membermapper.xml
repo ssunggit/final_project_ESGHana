@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member.dao.memberDAO">
+	<resultMap type="kr.ac.kopo.member.vo.MemberVO" id="MemberMap">
+      <result column="id" property="id"/>
+      <result column="password" property="password"/>
+      <result column="name" property="name"/>
+      <result column="tel" property="tel"/>
+      <result column="birth" property="birth"/>
+      <result column="email" property="email"/>
+      <result column="address" property="address"/>
+      <result column="type" property="type"/>
+      <result column="reg_Date" property="regDate"/>
+      <result column="company_Code" property="companyCode"/>
+      <result column="point" property="point"/>
+      <result column="profile" property="profile"/>
+   </resultMap>
+   
+	<select id="login" parameterType="memberVO" resultMap="MemberMap">
+		select * from member 
+		where id=#{id} and password=#{password}
+	</select>
+	
+	<insert id="signupCompany" parameterType="memberVO">
+		insert into member(id, password, name, tel, email, type, company_Code, profile) 
+		values (#{id}, #{password}, #{name}, #{tel}, #{email}, 'C', #{companyCode}, #{profile})
+	</insert>
+	
+	<update id="updatePoint" parameterType="memberVO">
+		UPDATE member SET point = point + #{point} where id = #{id}
+	</update>
+  
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <typeAliases>
+  	<typeAlias type="kr.ac.kopo.moneybox.vo.MoneyBoxVO" alias="moneyBoxVO"/>
+  	<typeAlias type="kr.ac.kopo.member.vo.MemberVO" alias="memberVO"/>
+  	<typeAlias type="kr.ac.kopo.donation.vo.DonationVO" alias="donationVO"/>
+  	<typeAlias type="kr.ac.kopo.account.vo.AccountVO" alias="accountVO"/>
+  	<typeAlias type="kr.ac.kopo.saving.vo.SavingVO" alias="savingVO"/>
+  	<typeAlias type="kr.ac.kopo.donationHistory.vo.DonationHistoryVO" alias="donationHistoryVO"/>
+  	<typeAlias type="kr.ac.kopo.company.vo.CompanyVO" alias="companyVO"/>
+  	<typeAlias type="kr.ac.kopo.challenge.vo.ChallengeHistoryVO" alias="challengeHistoryVO"/>
+  	<typeAlias type="kr.ac.kopo.challenge.vo.ChallengeVO" alias="challengeVO"/>
+  	<typeAlias type="kr.ac.kopo.challengeCompanyJoin.vo.ChallengeCompanyJoinVO" alias="challengeCompanyJoinVO"/>
+  </typeAliases> 
+</configuration>
